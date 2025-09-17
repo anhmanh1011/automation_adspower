@@ -1,0 +1,17 @@
+# AdsPower API Configuration
+ADSPOWER_API_URL=http://127.0.0.1:50325
+ADSPOWER_API_KEY=your_api_key_here
+
+# Browser Settings
+BROWSER_TIMEOUT=30000
+PAGE_TIMEOUT=30000
+NAVIGATION_TIMEOUT=60000
+
+# Logging Settings
+LOG_LEVEL=INFO
+LOG_FILE=adspower_automation.log
+
+# Default Browser Settings
+HEADLESS=false
+VIEWPORT_WIDTH=1920
+VIEWPORT_HEIGHT=1080
