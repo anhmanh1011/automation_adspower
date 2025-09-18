@@ -40,38 +40,9 @@ class BrowserControllerSync:
             logger.error(f"Failed to start Playwright: {e}")
             raise
     
-    def connect_to_browser(self, profile_id: str, headless: bool = None, 
-                          last_opened_tabs: bool = True, proxy_detection: bool = False,
-                          password_filling: bool = False, password_saving: bool = True,
-                          cdp_mask: bool = True, delete_cache: bool = False,
-                          device_scale: float = None, launch_args: List[str] = None) -> Browser:
+    def connect_to_browser(self, profile_id: str, webdriver_url: str) -> Browser:
         """Kết nối đến trình duyệt AdsPower thông qua CDP (API v2)"""
         try:
-            # Khởi động trình duyệt AdsPower
-            logger.info(f"Starting browser for profile: {profile_id}")
-            start_result = self.adspower_api.start_browser(
-                profile_id=profile_id,
-                headless=headless,
-                last_opened_tabs=last_opened_tabs,
-                proxy_detection=proxy_detection,
-                password_filling=password_filling,
-                password_saving=password_saving,
-                cdp_mask=cdp_mask,
-                delete_cache=delete_cache,
-                device_scale=device_scale,
-                launch_args=launch_args
-            )
-            
-            if start_result.get('code') != 0:
-                raise Exception(f"Failed to start browser: {start_result.get('msg', 'Unknown error')}")
-            
-            # Chờ trình duyệt sẵn sàng
-            if not self.adspower_api.wait_for_browser_ready(profile_id, timeout=30):
-                raise Exception(f"Browser not ready after 30 seconds for profile {profile_id}")
-            
-            # Lấy WebDriver URL
-            webdriver_url = self.adspower_api.get_webdriver_url(profile_id)
-            logger.info(f"Connecting to browser via CDP: {webdriver_url}")
             
             # Kết nối đến trình duyệt thông qua CDP
             self.browser = self.playwright.chromium.connect_over_cdp(webdriver_url)
@@ -431,7 +402,7 @@ class BrowserControllerSync:
     def close(self) -> None:
         """Đóng tất cả kết nối"""
         try:
-            self.close_context()
+            # self.close_context()
             self.close_browser()
             
             if self.playwright:
